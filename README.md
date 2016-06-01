@@ -12,7 +12,7 @@ Meta data extractor from various databases
   * get columnType
   * get primary key
   * get foreign key
-  * get columnLenght
+  * get columnLength
   * get columnAtPosition
   * get foregn Keys referenced table
   * get indexes (primary and foreign) for a table
@@ -32,9 +32,8 @@ Meta data extractor from various databases
  
 # How to implement
 
- ### CORE CLASSES
-  * A wraper for the underline JDBC driver
-  * authenticate user
+### CORE CLASSES
+  * A wraper for the underlying DB driver
   * connect to db
   * extract meta data
  
@@ -42,8 +41,9 @@ Meta data extractor from various databases
  * A wraper for the CORE CLASSES
  * use core features through command line
 
-### REST SERVICE WRAPER
+### REST SERVICE
  * Use Vertx micro services
+ * User authentication
  * A wraper for the CORE CLASSES
- * define specific end point for each core feature
- * generates Json as a response
+ * define specific end points for each core feature
+ * generate Json as a response
