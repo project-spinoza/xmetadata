@@ -1,7 +1,7 @@
 # xmetadata
 Meta data extractor from various databases
 
-# what to extract ?
+# what to extract :confused:
 
 ## LIST
   * list databases
