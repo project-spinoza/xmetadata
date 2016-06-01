@@ -1,5 +1,5 @@
 # xmetadata
-Meta data extractor from various databases
+Meta data extraction from various databases
 
 # what to extract?
 
