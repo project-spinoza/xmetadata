@@ -22,9 +22,9 @@ public class App {
     settings.put("jdbc_driver", "com.mysql.jdbc.Driver");
     settings.put("db_host", "localhost");
     settings.put("db_port", 3306);
-    settings.put("db_name", "fynder_website");
+    settings.put("db_name", "knowledge_base");
     settings.put("db_user", "root");
-    settings.put("db_pass", "1234");
+    settings.put("db_pass", "xxxxx");
 
     XmetaTest xMeta = null;
     try {
@@ -139,7 +139,7 @@ public class App {
 
     /*** table exists ***/
     DatabaseMetaData meta = connection.getMetaData();
-    rs = meta.getTables("fynder_crawl", null, "poisync", new String[] { "TABLE" });
+    rs = meta.getTables("knowledge_base", null, "exprements", new String[] { "TABLE" });
     while (rs.next()) {
       System.out.println("   " + rs.getString("TABLE_CAT") + ", "
           + rs.getString("TABLE_SCHEM") + ", " + rs.getString("TABLE_NAME")
