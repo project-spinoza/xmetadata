@@ -20,12 +20,12 @@ Meta data extractor from various databases
   * get stored procedures
 
 ## EXISTS
-  * exists database <db_name>
-  * exists table <table_name>
-  * exists column <column_name>
+  * exists database <db_name> ?
+  * exists table <table_name> ?
+  * exists column <column_name> ?
 
 ## SUPPORTS (supported features)
-  * supports groupBy
-  * supports outerJoin
-  * supports innerJoin
+  * supports groupBy ?
+  * supports outerJoin ?
+  * supports innerJoin ?
   * etc...
