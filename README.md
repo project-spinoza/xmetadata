@@ -3,12 +3,12 @@ Meta data extractor from various databases
 
 # what to extract?
 
-## LIST
+### LIST
   * list databases
   * list tables
   * list columns
 
-## GET
+### GET
   * get columnType
   * get primary key
   * get foreign key
@@ -19,12 +19,12 @@ Meta data extractor from various databases
   * get All indexes and referreced table
   * get stored procedures
 
-## EXISTS
+### EXISTS
   * exists database [db_name] ?
   * exists table [table_name] ?
   * exists column [column_name] ?
 
-## SUPPORTS (supported features)
+### SUPPORTS (supported features)
   * supports groupBy ?
   * supports outerJoin ?
   * supports innerJoin ?
