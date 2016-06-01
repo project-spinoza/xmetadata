@@ -12,10 +12,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<maven.compiler.version>2.3.2</maven.compiler.version>
 		<log4j.version>2.3</log4j.version>
 		<mysql.connectorj.version>5.1.6</mysql.connectorj.version>
+		<vertx.version>3.2.1</vertx.version>
+		<jackson.mapper.version>1.9.13</jackson.mapper.version>
 		<junit.version>4.11</junit.version>
 	</properties>
 
@@ -43,6 +45,29 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
+		
+		<!-- vertx core -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core</artifactId>
+			<version>${vertx.version}</version>
+		</dependency>
+
+		<!-- vertx web dependency -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-web</artifactId>
+			<version>${vertx.version}</version>
+		</dependency>
+		
+		<!-- jackson mapper -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.mapper.version}</version>
+		</dependency>
+		
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

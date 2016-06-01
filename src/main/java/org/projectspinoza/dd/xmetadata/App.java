@@ -31,8 +31,8 @@ public class App {
       xMeta = new XmetaTest(settings);
       xMeta.connect();
 
-      printInfo2(xMeta.getConnection());
-      // . printInfo(xMeta.getConnection());
+      //. printInfo2(xMeta.getConnection());
+      printInfo(xMeta.getConnection());
 
       xMeta.close();
     } catch (Exception e) {
