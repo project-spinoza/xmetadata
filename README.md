@@ -17,7 +17,6 @@ Meta data extraction from various databases
   * get foregn Keys referenced table
   * get indexes (primary and foreign) for a table
   * get All indexes and referreced table
-  * get stored procedures
 
 ### EXISTS
   * exists database [db_name] ?
