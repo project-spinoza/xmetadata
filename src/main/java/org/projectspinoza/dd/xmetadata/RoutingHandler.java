@@ -2,7 +2,7 @@ package org.projectspinoza.dd.xmetadata;
 
 import io.vertx.ext.web.RoutingContext;
 
-public interface XmetaRoutingHandler {
+public interface RoutingHandler {
   
   public void info(RoutingContext routingContext);
   
@@ -28,10 +28,8 @@ public interface XmetaRoutingHandler {
   public void columnExists(RoutingContext routingContext);
   
   /*** SUPPORTS ***/
-  public void supportsGroupBy(RoutingContext routingContext);
-  public void supportsOuterJoins(RoutingContext routingContext);
-  public void supportsInnerJoins(RoutingContext routingContext);
-  
+  public void supportsFeature(RoutingContext routingContext);
+ 
   /*** BASIC DATABASE INFO ***/
   public void getDatabaseInfo(RoutingContext routingContext);
   
