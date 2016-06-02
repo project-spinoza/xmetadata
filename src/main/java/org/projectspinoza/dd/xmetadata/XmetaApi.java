@@ -1,6 +1,7 @@
 package org.projectspinoza.dd.xmetadata;
 
-public interface RestApi {
+
+public interface XmetaApi {
   
   /*** LIST ***/ 
   public XmetaResult listDatabases();
