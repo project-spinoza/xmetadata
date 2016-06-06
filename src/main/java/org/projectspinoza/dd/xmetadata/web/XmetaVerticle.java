@@ -1,33 +1,43 @@
 package org.projectspinoza.dd.xmetadata.web;
 
-import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.projectspinoza.dd.xmetadata.RoutingHandler;
+import org.projectspinoza.dd.xmetadata.XmetaApi;
+import org.projectspinoza.dd.xmetadata.XmetaResult;
+import org.projectspinoza.dd.xmetadata.core.MysqlApi;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
-import org.projectspinoza.dd.xmetadata.RoutingHandler;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
-  
+  private static Logger LOG = LogManager.getRootLogger();
   private Router router;
-
+  
+  /*** to be removed ***/
+  private XmetaApi xmeta;
+  private Properties settings;
+  
   @Override
   public void start(Future<Void> startFuture) throws Exception {
     super.start(startFuture);
     router = Router.router(vertx);
-
+    
     router.route().handler(BodyHandler.create());
     
     router.get("/xmeta/api/v1/").handler(this::info);
@@ -65,53 +75,100 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void info(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    Map<String, String> availableRoutes = new HashMap<String, String>();
+    init();
+    List<String> availableRoutes = new ArrayList<String>();
     
     List<Route> allRoutes = router.getRoutes();
     for(Route r : allRoutes){
       if(r.getPath() != null && !(r.getPath().isEmpty())){
-        availableRoutes.put(r.getPath(), r.toString());
+        availableRoutes.add(r.getPath());
       }
     }
     System.out.println("allRoutes: " + availableRoutes.size());
-    Buffer responseData = null;
-    try {
-      String result = new ObjectMapper().writeValueAsString(availableRoutes);
-      responseData = Buffer.buffer(result.getBytes());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    XmetaResult<List<String>> r = new XmetaResult<List<String>>();
+    r.setStatus(200);
+    r.setTitle("ListRoutes");
+    r.setResult(availableRoutes);
+    Buffer responseData = toBuffer(r);
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
+    
+    //. close connection
+    xmeta.closeConnection();
+    
     response.end(responseData);
   }
 
   @Override
   public void listDatabases(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
+    init();
+    Buffer responseData = toBuffer(xmeta.listDatabases());
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
     
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
 
   @Override
   public void listTables(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
+    init();
     
+    Buffer responseData = toBuffer(xmeta.listTables(routingContext.request().getParam("database")));
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
+    
+    
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
 
   @Override
   public void listColumns(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
+    init();
+    
+    Buffer responseData = toBuffer(xmeta.listColumns(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
+    
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
     
   }
 
   @Override
   public void listColumnsWithType(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
+    init();
     
+    Buffer responseData = toBuffer(xmeta.listColumnsWithType(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
+    
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
 
   @Override
@@ -197,5 +254,48 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     // TODO Auto-generated method stub
     
   }
-
+  
+  private void connect(){
+    try {
+      LOG.debug("connecting to database: {}", settings);
+      String db_url = getDbUrl();
+      LOG.debug("db_url: {}", db_url);
+      Class.forName(settings.getProperty("jdbc_driver")).newInstance();
+      Connection connection = DriverManager.getConnection(db_url, settings.getProperty("db_user"), settings.getProperty("db_pass"));
+      LOG.debug("connection succeeded");
+      xmeta = new MysqlApi(connection);
+    } catch (Exception e){
+      e.printStackTrace();
+      LOG.error("cannot connecto to database");
+    }
+  }
+  
+  private String getDbUrl() {
+    return "jdbc:mysql://" + settings.getProperty("db_host") + ":"
+        + settings.get("db_port") + "/" + settings.getProperty("db_name")
+        + "?autoReconnect=true&useSSL=false";
+  }
+  
+  public void init(){
+    settings = new Properties();
+    settings.put("jdbc_driver", "com.mysql.jdbc.Driver");
+    settings.put("db_host", "localhost");
+    settings.put("db_port", 3306);
+    settings.put("db_name", "fynder_website");
+    settings.put("db_user", "root");
+    settings.put("db_pass", "1234");
+    
+    connect();
+  }
+  
+  private Buffer toBuffer(XmetaResult result){
+    Buffer responseData = null;
+    try {
+      String jsonString = new ObjectMapper().writeValueAsString(result);
+      responseData = Buffer.buffer(jsonString.getBytes());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return responseData;
+  }
 }

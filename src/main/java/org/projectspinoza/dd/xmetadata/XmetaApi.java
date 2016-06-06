@@ -35,4 +35,7 @@ public interface XmetaApi {
   /*** BASIC DATABASE DRIVER INFO ***/
   public XmetaResult getDatabaseDriverInfo();
   
+  /*** temp will be removed ***/
+  public void closeConnection();
+  
 }
