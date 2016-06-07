@@ -22,9 +22,9 @@ public class App {
     settings.put("jdbc_driver", "com.mysql.jdbc.Driver");
     settings.put("db_host", "localhost");
     settings.put("db_port", 3306);
-    settings.put("db_name", "knowledge_base");
+    settings.put("db_name", "student");
     settings.put("db_user", "root");
-    settings.put("db_pass", "xxxxx");
+    settings.put("db_pass", "");
 
     XmetaTest xMeta = null;
     try {
@@ -69,7 +69,7 @@ public class App {
     rs.close();
 
     /*** db exists ***/
-    String dbToSearch = "alpacino";
+    String dbToSearch = "student";
     boolean found = false;
     rs = connection.getMetaData().getCatalogs();
     while (rs.next()) {
@@ -106,7 +106,7 @@ public class App {
     /*** Listing column types in a table ***/
     catalog = null;
     schemaPattern = null;
-    tableNamePattern = "type_of_food";
+    tableNamePattern = "student";
     String columnNamePattern = null;
 
     rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
@@ -122,7 +122,7 @@ public class App {
     /*** primary key for table ***/
     catalog = null;
     String schema = null;
-    String tableName = "type_of_food";
+    String tableName = "student";
 
     rs = databaseMetaData.getPrimaryKeys(catalog, schema, tableName);
 
@@ -139,7 +139,7 @@ public class App {
 
     /*** table exists ***/
     DatabaseMetaData meta = connection.getMetaData();
-    rs = meta.getTables("knowledge_base", null, "exprements", new String[] { "TABLE" });
+    rs = meta.getTables("student", null, "exprements", new String[] { "TABLE" });
     while (rs.next()) {
       System.out.println("   " + rs.getString("TABLE_CAT") + ", "
           + rs.getString("TABLE_SCHEM") + ", " + rs.getString("TABLE_NAME")
@@ -156,7 +156,7 @@ public class App {
     /*** Listing column types in a table ***/
     String catalog = null;
     String schemaPattern = null;
-    String tableNamePattern = "type_of_food";
+    String tableNamePattern = "student";
     String columnNamePattern = null;
 
     ResultSet rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);

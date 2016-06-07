@@ -29,6 +29,14 @@
 			<version>${mysql.connectorj.version}</version>
 		</dependency>
 
+		<!-- http://mvnrepository.com/artifact/postgresql/postgresql -->
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -45,7 +53,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-		
+
 		<!-- vertx core -->
 		<dependency>
 			<groupId>io.vertx</groupId>
@@ -59,15 +67,15 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-		
+
 		<!-- jackson mapper -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.mapper.version}</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

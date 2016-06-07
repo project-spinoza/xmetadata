@@ -145,25 +145,130 @@ public class MysqlApi implements XmetaApi {
   @Override
   public XmetaResult getColumnType(String databaseName, String tableName, String columnName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    String columnNamePattern =columnName;
+    
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ListTableColumnsWithType[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+   List<String> columnType = new ArrayList<String>();
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+  
+      while (rs.next()) {
+        columnType.add(rs.getString("TYPE_NAME"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(columnType);
+    return response;
   }
 
   @Override
   public XmetaResult getPrimaryKey(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ListTableColumnWithPrimarykey[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+    List<String> columnWithPrimaryKey = new ArrayList<String>();
+    
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getPrimaryKeys(catalog, schemaPattern, tableNamePattern);//(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+  
+      while (rs.next()) {
+        columnWithPrimaryKey.add( rs.getString(4));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(columnWithPrimaryKey);
+    return response;
+
   }
 
   @Override
   public XmetaResult getForeignKey(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ListTableColumnWithPrimarykey[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+    List<String> columnWithForeignKey = new ArrayList<String>();
+    
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getImportedKeys(catalog, schemaPattern, tableNamePattern);//(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+      
+      while (rs.next()) {
+        columnWithForeignKey.add( rs.getString("FKCOLUMN_NAME"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(columnWithForeignKey);
+    return response;
   }
 
   @Override
   public XmetaResult getColumnLength(String databaseName, String tableName, String columnName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    String columnNamePattern =columnName;
+    
+    XmetaResult<List<Integer>> response = new XmetaResult<List<Integer>>();
+    response.setStatus(200);
+    response.setTitle("ListTableColumnsWithType[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+   List<Integer> columnLength = new ArrayList<Integer>();
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+  
+      while (rs.next()) {
+        columnLength.add(rs.getInt("COLUMN_SIZE"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(columnLength);
+    return response;
   }
 
   @Override
@@ -175,60 +280,228 @@ public class MysqlApi implements XmetaApi {
   @Override
   public XmetaResult getForeignKeysReferencedTable(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ListTableColumnWithPrimarykey[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+    List<String> ForeignKeysReferencedTable = new ArrayList<String>();
+    
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getImportedKeys(catalog, schemaPattern, tableNamePattern);//(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+      
+      while (rs.next()) {
+        ForeignKeysReferencedTable.add( rs.getString("PKTABLE_NAME"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(ForeignKeysReferencedTable);
+    return response;
   }
 
   @Override
   public XmetaResult getIndexes(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ListIndexes[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+    List<String> TableIndexes = new ArrayList<String>();
+    
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getIndexInfo(catalog, schemaPattern, tableNamePattern,true,true);//(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+      
+      while (rs.next()) {
+        TableIndexes.add( rs.getString("INDEX_NAME"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(TableIndexes);
+    return response;
   }
 
   @Override
   public XmetaResult getAllIndexesAndReferencedTable(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return null;
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
+    
+    XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
+    response.setStatus(200);
+    response.setTitle("ListIndexes[" + databaseName + "." + tableName + "]");
+    ResultSet rs = null;
+    Map<String,String> TableIndexesandreferencedtable = new HashMap<String,String>();
+    
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
+      while (rs.next()) {
+        TableIndexesandreferencedtable.put("Referenced Table", rs.getString("TABLE_NAME"));
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(TableIndexesandreferencedtable);
+    return response;
   }
 
   @Override
   public boolean databaseExists(String databaseName) {
     // TODO Auto-generated method stub
-    return false;
+    String dbToSearch = databaseName;
+    ResultSet rs = null;
+    boolean found = false;
+    try{
+    rs = connection.getMetaData().getCatalogs();
+    while (rs.next()) {
+      // Get the database name, which is at position 1
+      String dbName = rs.getString(1);
+      if (dbName.equals(dbToSearch)) {
+        found = true;
+        break;
+      }
+    }
+    rs.close();
+   }
+    catch(Exception e){
+      e.printStackTrace();
+    }
+    return found;
   }
 
   @Override
   public boolean tableExists(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return false;
+    String catalog = databaseName;
+    String tableNamePattern = tableName;
+    String schemaPattern = null;
+    ResultSet rs = null;
+    boolean found = false;
+    try{
+      DatabaseMetaData meta = connection.getMetaData();
+      rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
+    while (rs.next()) {
+      // Get the database name, which is at position 1
+      String tablename = rs.getString(3);
+      if (tableNamePattern.equals(tablename)) {
+        found = true;
+        break;
+      }
+    }
+    rs.close();
+   }
+    catch(Exception e){
+      e.printStackTrace();
+    }
+    return found;
   }
 
   @Override
   public boolean columnExists(String databaseName, String tableName, String columnName) {
     // TODO Auto-generated method stub
-    return false;
+    String catalog = databaseName;
+    String tableNamePattern = tableName;
+    String schemaPattern = null;
+    String columnNamePattern = columnName;
+    ResultSet rs = null;
+    boolean found = false;
+    try{
+      DatabaseMetaData meta = connection.getMetaData();
+      rs = meta.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+    while (rs.next()) {
+      // Get the database name, which is at position 1
+      String columnname = rs.getString(4);
+      if (columnNamePattern.equals(columnname)) {
+        found = true;
+        break;
+      }
+    }
+    rs.close();
+   }
+    catch(Exception e){
+      e.printStackTrace();
+    }
+    return found;
   }
 
   @Override
   public boolean supportsGroupBy(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return false;
+    boolean supportsgroupBy = false;
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      supportsgroupBy = databaseMetaData.supportsGroupBy(); 
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return supportsgroupBy;
   }
 
   @Override
   public boolean supportsOuterJoins(String databaseName, String tableName) {
     // TODO Auto-generated method stub
-    return false;
+    boolean supportsOuterJoins = false;
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      supportsOuterJoins = databaseMetaData.supportsOuterJoins(); 
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return supportsOuterJoins;
   }
 
   @Override
   public boolean supportsInnerJoins(String databaseName, String tableName) {
     // TODO Auto-generated method stub
+    /* boolean supportsInnerJoins = false;
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      supportsInnerJoins = databaseMetaData.supports(); 
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }*/
     return false;
   }
 
   @Override
   public XmetaResult getDatabaseInfo() {
     // TODO Auto-generated method stub
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData(); 
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     return null;
   }
 
