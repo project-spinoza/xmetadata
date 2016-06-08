@@ -284,18 +284,18 @@ public class MysqlApi implements XmetaApi {
     String schemaPattern = null;
     String tableNamePattern = tableName;
     
-    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
     response.setStatus(200);
-    response.setTitle("ListTableColumnWithPrimarykey[" + databaseName + "." + tableName + "]");
+    response.setTitle("ForeignKeyReferencedTable[" + databaseName + "." + tableName + "]");
     ResultSet rs = null;
-    List<String> ForeignKeysReferencedTable = new ArrayList<String>();
+    Map<String,String> ForeignKeysReferencedTable = new HashMap<String,String>();
     
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       rs = databaseMetaData.getImportedKeys(catalog, schemaPattern, tableNamePattern);//(catalog, schemaPattern, tableNamePattern, columnNamePattern);
       
       while (rs.next()) {
-        ForeignKeysReferencedTable.add( rs.getString("PKTABLE_NAME"));
+        ForeignKeysReferencedTable.put(rs.getString("FKCOLUMN_NAME"),rs.getString("PKTABLE_NAME"));
       }
       rs.close();
     } catch (SQLException e){
@@ -452,7 +452,7 @@ public class MysqlApi implements XmetaApi {
   }
 
   @Override
-  public boolean supportsGroupBy(String databaseName, String tableName) {
+  public boolean supportsGroupBy() {
     // TODO Auto-generated method stub
     boolean supportsgroupBy = false;
     try {
@@ -466,49 +466,102 @@ public class MysqlApi implements XmetaApi {
   }
 
   @Override
-  public boolean supportsOuterJoins(String databaseName, String tableName) {
+  public boolean supportsOuterJoins() {
     // TODO Auto-generated method stub
     boolean supportsOuterJoins = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       supportsOuterJoins = databaseMetaData.supportsOuterJoins(); 
+      
     } catch (SQLException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return supportsOuterJoins;
   }
-
+  
   @Override
-  public boolean supportsInnerJoins(String databaseName, String tableName) {
+  public boolean supportsUnion() {
     // TODO Auto-generated method stub
-    /* boolean supportsInnerJoins = false;
+    boolean supportsUnion = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
-      supportsInnerJoins = databaseMetaData.supports(); 
-    } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }*/
-    return false;
-  }
-
-  @Override
-  public XmetaResult getDatabaseInfo() {
-    // TODO Auto-generated method stub
-    try {
-      DatabaseMetaData databaseMetaData = connection.getMetaData(); 
+      supportsUnion = databaseMetaData.supportsUnion(); 
+      
     } catch (SQLException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    return null;
+    return supportsUnion;
+  }
+
+  @Override
+  public boolean supportsUnionAll() {
+    // TODO Auto-generated method stub
+    boolean supportsUnionAll = false;
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      supportsUnionAll = databaseMetaData.supportsUnionAll(); 
+      
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return supportsUnionAll;
+  }
+  @Override
+  public XmetaResult getDatabaseInfo() {
+    // TODO Auto-generated method stub
+    XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData(); 
+      String Url = databaseMetaData.getURL();
+      String userName = databaseMetaData.getUserName();
+      String databaseName = databaseMetaData.getDatabaseProductName();
+      String databaseVersion = databaseMetaData.getDatabaseProductVersion();
+      
+      
+      response.setStatus(200);
+      response.setTitle("DataBaseInfo");
+      ResultSet rs = null;
+      Map<String,String> databaseInfo = new HashMap<String,String>();
+      databaseInfo.put("URL", Url );
+      databaseInfo.put("UserName", userName);
+      databaseInfo.put("DataBaseName", databaseName);
+      databaseInfo.put("DataBaseVersion", databaseVersion);
+      
+      response.setResult(databaseInfo);
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return response;
   }
 
   @Override
   public XmetaResult getDatabaseDriverInfo() {
     // TODO Auto-generated method stub
-    return null;
+    XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData(); 
+      String driverName = databaseMetaData.getDriverName();
+      String driverVersion = databaseMetaData.getDriverVersion();
+      String supportSQLKeywords = databaseMetaData.getSQLKeywords();
+      
+      response.setStatus(200);
+      response.setTitle("DataBaseDriverInfo");
+      ResultSet rs = null;
+      Map<String,String> databaseInfo = new HashMap<String,String>();
+      databaseInfo.put("DriverName", driverName );
+      databaseInfo.put("DriverVersion", driverVersion);
+      databaseInfo.put("SupportSQLKeywords", supportSQLKeywords);
+      response.setResult(databaseInfo);
+   
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return response;
   }
   
   @Override

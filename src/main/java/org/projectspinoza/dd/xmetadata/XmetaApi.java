@@ -25,9 +25,11 @@ public interface XmetaApi {
   public boolean columnExists(String databaseName, String tableName, String columnName);
   
   /*** SUPPORTS ***/
-  public boolean supportsGroupBy(String databaseName, String tableName);
-  public boolean supportsOuterJoins(String databaseName, String tableName);
-  public boolean supportsInnerJoins(String databaseName, String tableName);
+  public boolean supportsGroupBy();
+  public boolean supportsOuterJoins();
+  public boolean supportsUnion();
+  public boolean supportsUnionAll();
+  
   
   /*** BASIC DATABASE INFO ***/
   public XmetaResult getDatabaseInfo();

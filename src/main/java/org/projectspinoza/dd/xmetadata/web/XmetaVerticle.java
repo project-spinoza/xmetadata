@@ -61,7 +61,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     router.get("/xmeta/api/v1/exists/table/:table").handler(this::tableExists);
     router.get("/xmeta/api/v1/exists/column/:column").handler(this::columnExists);
     
-    router.get("/xmeta/api/v1/get/supports/:feature/:database/:table").handler(this::supportsFeature);
+    router.get("/xmeta/api/v1/get/supports/:feature").handler(this::supportsFeature);
     
     router.get("/xmeta/api/v1/info/db/").handler(this::getDatabaseInfo);
     router.get("/xmeta/api/v1/info/dbdriver/").handler(this::getDatabaseDriverInfo);
@@ -382,19 +382,92 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
   @Override
   public void supportsFeature(RoutingContext routingContext) {
     // TODO Auto-generated method stub
+    init();
     
+    XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
+    Map<String,String> responsedata = new HashMap<String, String>();
+    
+    String featureLabel = routingContext.request().getParam("feature");
+    Feature feature = Feature.none;
+    try {
+      feature = Feature.valueOf(featureLabel);
+    } catch (IllegalArgumentException | NullPointerException ex) {
+      ex.printStackTrace();
+    } 
+    
+    boolean featureSupported = false;
+    switch (feature) {
+      case group_by:
+        featureSupported = xmeta.supportsGroupBy();
+        break;
+      case outer_join:
+        featureSupported = xmeta.supportsOuterJoins();
+        break;
+      case union:
+        featureSupported = xmeta.supportsUnion();
+        break;
+      case union_all:
+        featureSupported = xmeta.supportsUnionAll();
+        break;
+      case none:
+        break;
+    }
+    if(feature.equals(Feature.none)){
+      r.setError("Invalid Feature -" + featureLabel);
+      r.setStatus(200);
+    }else{
+      r.setStatus(200);
+      r.setTitle("Supports " + featureLabel);
+      responsedata.put(featureLabel, String.valueOf(featureSupported));
+      r.setResult(responsedata);  
+    }
+    
+    
+    Buffer responseData = toBuffer(r);
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
+    
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
-
+  
   @Override
   public void getDatabaseInfo(RoutingContext routingContext) {
     // TODO Auto-generated method stub
+    init();
+    Buffer responseData = toBuffer(xmeta.getDatabaseInfo());
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
     
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
 
   @Override
   public void getDatabaseDriverInfo(RoutingContext routingContext) {
     // TODO Auto-generated method stub
+    init();
+    Buffer responseData = toBuffer(xmeta.getDatabaseDriverInfo());
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
     
+    //. close connection
+    xmeta.closeConnection();
+    
+    response.end(responseData);
   }
   
   private void connect(){
@@ -440,4 +513,8 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     }
     return responseData;
   }
+}
+
+enum Feature{
+  outer_join, group_by, union, union_all, none;
 }
