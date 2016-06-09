@@ -68,7 +68,21 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-
+		
+		<!-- vertx-auth-jdbc dependency -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-auth-jdbc</artifactId>
+			<version>${vertx.version}</version>
+		</dependency>
+		
+		<!-- vertx-auth-jwt dependency -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-auth-jwt</artifactId>
+			<version>${vertx.version}</version>
+		</dependency>
+		
 		<!-- jackson mapper -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

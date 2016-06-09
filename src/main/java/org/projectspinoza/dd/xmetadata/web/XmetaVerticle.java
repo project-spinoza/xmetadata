@@ -2,11 +2,11 @@ package org.projectspinoza.dd.xmetadata.web;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,19 +21,20 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTOptions;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.JWTAuthHandler;
 
 
 public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
   private static Logger LOG = LogManager.getRootLogger();
   private Router router;
-  
-  /*** to be removed ***/
-  private XmetaApi xmeta;
-  private Properties settings;
+  private JWTAuth authProvider;
   
   @Override
   public void start(Future<Void> startFuture) throws Exception {
@@ -41,7 +42,14 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     router = Router.router(vertx);
     
     router.route().handler(BodyHandler.create());
+    authProvider = JWTAuth.create(vertx, new JsonObject().put("keyStore", new JsonObject()
+        .put("type", "jceks")
+        .put("path", "keystore.jceks")
+        .put("password", "secret")));
     
+    router.route("/xmeta/*").handler(JWTAuthHandler.create(authProvider, "/auth"));
+    
+    router.post("/auth").consumes("application/json").handler(this::auth);
     router.get("/xmeta/api/v1/").handler(this::info);
     router.get("/xmeta/api/v1/list/db").handler(this::listDatabases);
     router.get("/xmeta/api/v1/list/table/:database").handler(this::listTables);
@@ -77,7 +85,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void info(RoutingContext routingContext) {
-    init();
+    
     List<String> availableRoutes = new ArrayList<String>();
     
     List<Route> allRoutes = router.getRoutes();
@@ -98,148 +106,126 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
     response.end(responseData);
   }
 
   @Override
   public void listDatabases(RoutingContext routingContext) {
-    init();
-    Buffer responseData = toBuffer(xmeta.listDatabases());
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    Buffer responseData = toBuffer(api.listDatabases());
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void listTables(RoutingContext routingContext) {
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(xmeta.listTables(routingContext.request().getParam("database")));
+    Buffer responseData = toBuffer(api.listTables(routingContext.request().getParam("database")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+   
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void listColumns(RoutingContext routingContext) {
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(xmeta.listColumns(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    Buffer responseData = toBuffer(api.listColumns(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
     
   }
 
   @Override
   public void listColumnsWithType(RoutingContext routingContext) {
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(xmeta.listColumnsWithType(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    Buffer responseData = toBuffer(api.listColumnsWithType(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getColumnType(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(xmeta.getColumnType(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
+    Buffer responseData = toBuffer(api.getColumnType(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getPrimaryKey(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getPrimaryKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getPrimaryKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getForeignKey(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getForeignKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getForeignKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getColumnLength(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(xmeta.getColumnLength(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
+    Buffer responseData = toBuffer(api.getColumnLength(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
     
   }
@@ -252,63 +238,57 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getForeignKeysReferencedTable(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getForeignKeysReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getForeignKeysReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getIndexes(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getIndexes(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getIndexes(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getAllIndexesAndReferencedTable(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getAllIndexesAndReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getAllIndexesAndReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void databaseExists(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
     String databaseName =routingContext.request().getParam("db").toString();
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
-    boolean exists = xmeta.databaseExists(databaseName);
+    boolean exists = api.databaseExists(databaseName);
     r.setStatus(200);
     r.setTitle("DataBaseExists");
     responsedata.put(databaseName, String.valueOf(exists));
@@ -320,21 +300,19 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void tableExists(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
     String tableName =routingContext.request().getParam("table").toString();
     String databaseName = "testDb";
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
-    boolean exists = xmeta.tableExists(databaseName,tableName);
+    boolean exists = api.tableExists(databaseName,tableName);
     r.setStatus(200);
     r.setTitle("TableExists");
     responsedata.put(tableName, String.valueOf(exists));
@@ -345,23 +323,21 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void columnExists(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
     String columnName =routingContext.request().getParam("column").toString();
     String databaseName = "testDb";
     String tableName = "company";
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
-    boolean exists = xmeta.columnExists(databaseName,tableName,columnName);
+    boolean exists = api.columnExists(databaseName,tableName,columnName);
     r.setStatus(200);
     r.setTitle("ColumnExists");
     responsedata.put(columnName, String.valueOf(exists));
@@ -372,17 +348,14 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void supportsFeature(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
@@ -398,16 +371,16 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     boolean featureSupported = false;
     switch (feature) {
       case group_by:
-        featureSupported = xmeta.supportsGroupBy();
+        featureSupported = api.supportsGroupBy();
         break;
       case outer_join:
-        featureSupported = xmeta.supportsOuterJoins();
+        featureSupported = api.supportsOuterJoins();
         break;
       case union:
-        featureSupported = xmeta.supportsUnion();
+        featureSupported = api.supportsUnion();
         break;
       case union_all:
-        featureSupported = xmeta.supportsUnionAll();
+        featureSupported = api.supportsUnionAll();
         break;
       case none:
         break;
@@ -422,7 +395,6 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
       r.setResult(responsedata);  
     }
     
-    
     Buffer responseData = toBuffer(r);
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
@@ -430,77 +402,104 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
   
   @Override
   public void getDatabaseInfo(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getDatabaseInfo());
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getDatabaseInfo());
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
     
-    //. close connection
-    xmeta.closeConnection();
-    
+    api.closeConnection();
     response.end(responseData);
   }
 
   @Override
   public void getDatabaseDriverInfo(RoutingContext routingContext) {
-    // TODO Auto-generated method stub
-    init();
-    Buffer responseData = toBuffer(xmeta.getDatabaseDriverInfo());
+    XmetaApi api = getApiHandler(routingContext.user().principal());
+    
+    Buffer responseData = toBuffer(api.getDatabaseDriverInfo());
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
     .add("Content-Length", responseData.length()+"")
     .add("Content-Type", "application/json");
-    
-    //. close connection
-    xmeta.closeConnection();
-    
+
+    api.closeConnection();
     response.end(responseData);
   }
   
-  private void connect(){
-    try {
-      LOG.debug("connecting to database: {}", settings);
-      String db_url = getDbUrl();
-      LOG.debug("db_url: {}", db_url);
-      Class.forName(settings.getProperty("jdbc_driver")).newInstance();
-      Connection connection = DriverManager.getConnection(db_url, settings.getProperty("db_user"), settings.getProperty("db_pass"));
-      LOG.debug("connection succeeded");
-      xmeta = new PostgreMysqlApi(connection);
-    } catch (Exception e){
-      e.printStackTrace();
-      LOG.error("cannot connecto to database");
+  private void auth(RoutingContext routingContext){
+    JsonObject postJson = routingContext.getBodyAsJson();
+    JsonObject user = new JsonObject()
+        .put("db_host", postJson.getString("db_host"))
+        .put("db_port", postJson.getInteger("db_port"))
+        .put("db_user", postJson.getString("db_user"))
+        .put("db_pass", postJson.getString("db_pass"))
+        .put("db_type", postJson.getString("db_type"));
+    if(postJson.containsKey("db_name")){
+      user.put("db_name", postJson.getString("db_name"));
     }
+    XmetaApi xmeta = null;
+    if((xmeta = getApiHandler(user)) == null){
+      routingContext.fail(401);
+    }else{
+      xmeta.closeConnection();
+      routingContext.response().end(authProvider.generateToken(user, new JWTOptions().setExpiresInMinutes(1L)));
+    } 
   }
   
-  private String getDbUrl() {
-    return /*""jdbc:mysql*/"jdbc:postgresql://" + settings.getProperty("db_host") + ":"
-        + settings.get("db_port") + "/" + settings.getProperty("db_name");
-       // + "?autoReconnect=true&useSSL=false";
+  /**
+   * creates and returns conneciton on the basis of the following parameters.
+   * 
+   * @param info
+   * @param driver
+   * @param dbtype
+   * @param dbname
+   * @return Connection Object
+   * @throws ClassNotFoundException 
+   * @throws IllegalAccessException 
+   * @throws InstantiationException 
+   * @throws SQLException 
+   */
+  private Connection connect(JsonObject settings, String driver, String dbtype, String dbname) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+    LOG.info("settings {}", settings);
+    Class.forName(driver).newInstance();
+    String dbURL = buildDbUrl(dbtype, settings.getString("db_host"), settings.getInteger("db_port"), dbname);
+    return DriverManager.getConnection(dbURL, settings.getString("db_user"), settings.getString("db_pass"));
   }
   
-  public void init(){
-    settings = new Properties();
-    settings.put("jdbc_driver", "org.postgresql.Driver");//"com.mysql.jdbc.Driver");
-    settings.put("db_host", "localhost");
-    settings.put("db_port", "5432");//3306);
-    settings.put("db_name", "testDb");///"student");
-    settings.put("db_user", "postgres");//"root");
-    settings.put("db_pass", "ashjah2230");//"");
-    
-    connect();
+  private String buildDbUrl(String dbms, String host, int port, String dbName){
+    return "jdbc:" + dbms + "://" + host + ":" + port + "/" + dbName + "?autoReconnect=true&useSSL=false";
+  }
+  
+  private XmetaApi getApiHandler(JsonObject credentials){
+    XmetaApi xmeta = null;
+    String dbname = credentials.containsKey("db_name") ? credentials.getString("db_name") : null;
+    try{
+      DBMS dbms = DBMS.valueOf(credentials.getString("db_type"));
+      switch(dbms){
+      case mysql:
+        xmeta = new PostgreMysqlApi(connect(credentials, dbms.getDriver(), dbms.name(), dbname == null ? "mysql" : dbname));
+        break;
+      case postgres:
+        xmeta = new PostgreMysqlApi(connect(credentials, dbms.getDriver(), dbms.name(), dbname == null ? "postgres" : dbname));
+        break;
+      default:
+        break;
+      }
+    }catch(InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e){
+      LOG.error("failed connecting to database[{}]", dbname);
+      e.printStackTrace();
+    }
+    return xmeta;
   }
   
   private Buffer toBuffer(XmetaResult result){
@@ -517,4 +516,18 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
 enum Feature{
   outer_join, group_by, union, union_all, none;
+}
+
+enum DBMS{
+  mysql("com.mysql.jdbc.Driver"), postgres("org.postgresql.Driver");
+  
+  private final String driver;
+  
+  DBMS(String driver){
+    this.driver = driver;
+  }
+  
+  public String getDriver(){
+    return driver;
+  }
 }

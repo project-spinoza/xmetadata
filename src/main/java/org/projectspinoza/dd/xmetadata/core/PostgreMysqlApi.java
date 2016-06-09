@@ -144,7 +144,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getColumnType(String databaseName, String tableName, String columnName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -176,7 +176,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getPrimaryKey(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -209,7 +209,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getForeignKey(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -241,7 +241,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getColumnLength(String databaseName, String tableName, String columnName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -273,13 +273,13 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getColumnAtPosition(String databaseName, int columnPosition) {
-    // TODO Auto-generated method stub
+    
     return null;
   }
 
   @Override
   public XmetaResult getForeignKeysReferencedTable(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -311,7 +311,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getIndexes(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -343,7 +343,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getAllIndexesAndReferencedTable(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String schemaPattern = null;
     String tableNamePattern = tableName;
@@ -374,7 +374,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean databaseExists(String databaseName) {
-    // TODO Auto-generated method stub
+    
     String dbToSearch = databaseName;
     ResultSet rs = null;
     boolean found = false;
@@ -398,7 +398,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean tableExists(String databaseName, String tableName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String tableNamePattern = tableName;
     String schemaPattern = null;
@@ -408,7 +408,6 @@ public class PostgreMysqlApi implements XmetaApi {
       DatabaseMetaData meta = connection.getMetaData();
       rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
     while (rs.next()) {
-      // Get the database name, which is at position 1
       String tablename = rs.getString(3);
       if (tableNamePattern.equals(tablename)) {
         found = true;
@@ -425,7 +424,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean columnExists(String databaseName, String tableName, String columnName) {
-    // TODO Auto-generated method stub
+    
     String catalog = databaseName;
     String tableNamePattern = tableName;
     String schemaPattern = null;
@@ -453,7 +452,7 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean supportsGroupBy() {
-    // TODO Auto-generated method stub
+    
     boolean supportsgroupBy = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
@@ -467,14 +466,11 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean supportsOuterJoins() {
-    // TODO Auto-generated method stub
     boolean supportsOuterJoins = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       supportsOuterJoins = databaseMetaData.supportsOuterJoins(); 
-      
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return supportsOuterJoins;
@@ -482,14 +478,11 @@ public class PostgreMysqlApi implements XmetaApi {
   
   @Override
   public boolean supportsUnion() {
-    // TODO Auto-generated method stub
     boolean supportsUnion = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       supportsUnion = databaseMetaData.supportsUnion(); 
-      
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return supportsUnion;
@@ -497,21 +490,17 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public boolean supportsUnionAll() {
-    // TODO Auto-generated method stub
     boolean supportsUnionAll = false;
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       supportsUnionAll = databaseMetaData.supportsUnionAll(); 
-      
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return supportsUnionAll;
   }
   @Override
   public XmetaResult getDatabaseInfo() {
-    // TODO Auto-generated method stub
     XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData(); 
@@ -519,7 +508,6 @@ public class PostgreMysqlApi implements XmetaApi {
       String userName = databaseMetaData.getUserName();
       String databaseName = databaseMetaData.getDatabaseProductName();
       String databaseVersion = databaseMetaData.getDatabaseProductVersion();
-      
       
       response.setStatus(200);
       response.setTitle("DataBaseInfo");
@@ -540,7 +528,6 @@ public class PostgreMysqlApi implements XmetaApi {
 
   @Override
   public XmetaResult getDatabaseDriverInfo() {
-    // TODO Auto-generated method stub
     XmetaResult<Map<String,String>> response = new XmetaResult<Map<String,String>>();
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData(); 
