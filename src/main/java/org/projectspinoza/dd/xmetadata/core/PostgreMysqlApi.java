@@ -15,12 +15,12 @@ import org.projectspinoza.dd.xmetadata.XmetaApi;
 import org.projectspinoza.dd.xmetadata.XmetaResult;
 
 
-public class MysqlApi implements XmetaApi {
+public class PostgreMysqlApi implements XmetaApi {
   private static Logger LOG = LogManager.getRootLogger();
   
   private Connection connection;
   
-  public MysqlApi(Connection connection){
+  public PostgreMysqlApi(Connection connection){
     this.connection = connection;
   }
   

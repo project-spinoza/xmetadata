@@ -16,6 +16,7 @@
 		<maven.compiler.version>2.3.2</maven.compiler.version>
 		<log4j.version>2.3</log4j.version>
 		<mysql.connectorj.version>5.1.6</mysql.connectorj.version>
+		<postgresql.connectorj.version>9.1-901-1.jdbc4</postgresql.connectorj.version>
 		<vertx.version>3.2.1</vertx.version>
 		<jackson.mapper.version>1.9.13</jackson.mapper.version>
 		<junit.version>4.11</junit.version>
@@ -33,7 +34,7 @@
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.1-901-1.jdbc4</version>
+			<version>${postgresql.connectorj.version}</version>
 		</dependency>
 
 

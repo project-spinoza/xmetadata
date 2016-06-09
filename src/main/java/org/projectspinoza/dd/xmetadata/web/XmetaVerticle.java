@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.projectspinoza.dd.xmetadata.RoutingHandler;
 import org.projectspinoza.dd.xmetadata.XmetaApi;
 import org.projectspinoza.dd.xmetadata.XmetaResult;
-import org.projectspinoza.dd.xmetadata.core.MysqlApi;
+import org.projectspinoza.dd.xmetadata.core.PostgreMysqlApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -478,7 +478,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
       Class.forName(settings.getProperty("jdbc_driver")).newInstance();
       Connection connection = DriverManager.getConnection(db_url, settings.getProperty("db_user"), settings.getProperty("db_pass"));
       LOG.debug("connection succeeded");
-      xmeta = new MysqlApi(connection);
+      xmeta = new PostgreMysqlApi(connection);
     } catch (Exception e){
       e.printStackTrace();
       LOG.error("cannot connecto to database");
