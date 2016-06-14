@@ -1,33 +1,38 @@
 # xmetadata
 Meta data extraction from various databases
 
-# what to extract?
+# How to build
+ * Download `git clone https://github.com/project-spinoza/xmetadata.git`
+ * Change Dir `cd xmetadata`
+ * Build `mvn clean install`
+ 
+### How to run
+  * RUN `sh launch.sh --mode cmd`<br>
+  **NOTE** --mode can take two values `cmd` OR `rest`<br>
+when started with `--mode cmd` the application starts as a commandline tool<br>
+when started with `--mode rest` the application starts as a REST service.
 
-### LIST
-  * list databases
-  * list tables
-  * list columns
+### REST End Points
+  * Lists available Routes `/xmeta/api/v1/`
+  * Shows databases `/xmeta/api/v1/list/db`
+  * Shows tables `/xmeta/api/v1/list/table/:database`
+  * Shows columns `/xmeta/api/v1/list/column/:database/:table`
+  * Shows columns with types `/xmeta/api/v1/list/columnWithType/:database/:table`
+  * Get column type `/xmeta/api/v1/get/columnType/:database/:table/:column`
+  * Get column length `/xmeta/api/v1/get/columnLength/:database/:table/:column`
+  * Get column at pos `/xmeta/api/v1/get/columnAtPos/:database/:table/:columnIndex`
+  * Get primary key `/xmeta/api/v1/get/primaryKey/:database/:table`
+  * Get foreign key `/xmeta/api/v1/get/foreignKey/:database/:table`
+  * Get foreign key reference tables `/xmeta/api/v1/get/foreignKeysRefTable/:database/:table`
+  * Get indexes `/xmeta/api/v1/get/indexes/:database/:table`
+  * Get all indexes and ref tables `/xmeta/api/v1/get/allIdxRefTable/:database/:table`
+  * Database exists `/xmeta/api/v1/exists/db/:db`
+  * Table exists `/xmeta/api/v1/exists/table/:table`
+  * Column exists `/xmeta/api/v1/exists/column/:column`
+  * Supported features `/xmeta/api/v1/get/supports/:feature`
+  * Get database info `/xmeta/api/v1/info/db/`
+  * Get database driver info `/xmeta/api/v1/info/dbdriver/`
 
-### GET
-  * get columnType
-  * get primary key
-  * get foreign key
-  * get columnLength
-  * get columnAtPosition
-  * get foregn Keys referenced table
-  * get indexes (primary and foreign) for a table
-  * get All indexes and referreced table
-
-### EXISTS
-  * exists database [db_name] ?
-  * exists table [table_name] ?
-  * exists column [column_name] ?
-
-### SUPPORTS (supported features)
-  * supports groupBy ?
-  * supports outerJoin ?
-  * supports innerJoin ?
-  * etc...
  
 # How to implement
 
