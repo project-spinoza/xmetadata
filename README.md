@@ -41,6 +41,19 @@ when started with `--mode rest` the application starts as a REST service.
   * xmeta showDatabases <br>
   * xmeta showTables `-db` db_name<br>
   * xmeta showColumns `-db` db_name `-tbl` table_name
+  * xmeta showColsWithType `-db` db_name `-tbl` table_name
+  * xmeta getColType `-db` db_name `-tbl` table_name `-col` col_name
+  * xmeta getColLength `-db` db_name `-tbl` table_name `-col` col_name
+  * xmeta getColAtPos `-db` db_name `-tbl` table_name `-pos` col_pos
+  * xmeta getPK `-db` db_name `-tbl` table_name
+  * xmeta getFK `-db` db_name `-tbl` table_name
+  * xmeta getFKRefTables `-db` db_name `-tbl` table_name
+  * xmeta getIndexes `-db` db_name `-tbl` table_name
+  * xmeta getAllIdxRefTable `-db` db_name `-tbl` table_name
+  * xmeta existsDatabase `-db` db_name
+  * xmeta existsTable `-db` db_name `-tbl` table_name
+  * xmeta existsColumn `-db` db_name `-tbl` table_name `-col` col_name
+  * xmeta isSupport `-f` feature_name
 
 # How to implement
 
