@@ -8,8 +8,7 @@ Meta data extraction from various databases
  
 # How to run
   * RUN `sh launch.sh --mode cmd`<br>
-  **NOTE** <br>
-`--mode` can take two values `cmd` OR `rest`<br>
+  **NOTE** `--mode` can take two values `cmd` OR `rest`<br>
 when started with `--mode cmd` the application starts as a commandline tool<br>
 when started with `--mode rest` the application starts as a REST service.
 
