@@ -39,7 +39,7 @@ when started with `--mode rest` the application starts as a REST service.
     shows all available commands with their usage
   * xmeta \<commandName\> --help<br>
     shows help regarding this command
-  * xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type `? -db` db_name<br><br>
+  * xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type `? -db` db_name<br>
     connects to database `-type` represents type of db to connect to e.g. mysql | postgre
   * xmeta showDatabases <br>
     shows available databases
