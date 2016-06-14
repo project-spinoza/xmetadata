@@ -33,7 +33,12 @@ when started with `--mode rest` the application starts as a REST service.
   * Get database info `/xmeta/api/v1/info/db/`
   * Get database driver info `/xmeta/api/v1/info/dbdriver/`
 
- 
+# Available commands
+  * xmeta connect `-host` <db host> `-port` <db port> `-user` <db user> `-pass` <db pass>
+  * xmeta showDatabases
+  * xmeta showTables `-db` <db name>
+  * xmeta showColumns `-db` <db name> `-tbl` <table name>
+
 # How to implement
 
 ### CORE CLASSES
