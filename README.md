@@ -36,8 +36,8 @@ when started with `--mode rest` the application starts as a REST service.
 # Available commands
   * xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type<br>
   **Usage:** xmeta connect [options]<br>
-  Options:<br>
-  ...`--help`<br>
+  Options:
+  ...`--help`
   ... ...Display help for command<br>
   ... ...Default: false<br>
   ...`-db`<br>
