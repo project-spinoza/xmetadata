@@ -40,38 +40,55 @@ when started with `--mode rest` the application starts as a REST service.
 
   * `xmeta <commandName> --help`<br>
     shows help regarding this command
+
   * `xmeta connect -host <db_host> -port <db_port> -user <db_user> -pass <db_pwd> -type <db_type>`<br>
     connects to database `-type` represents type of db to connect to e.g. mysql | postgre
+
   * `xmeta showDatabases`<br>
     shows available databases
+
   * `xmeta showTables -db <db_name>`<br>
     shows available tables in the database
+
   * `xmeta showColumns -db <db_name> -tbl <table_name>`<br>
     shows all columns in the table
+
   * `xmeta showColsWithType -db <db_name> -tbl <table_name>`<br>
     shows all columns along with their data type in the table
+
   * `xmeta getColType -db <db_name> -tbl <table_name> -col <col_name>`<br>
     shows data type of the single column
+
   * `xmeta getColLength -db <db_name> -tbl <table_name> -col <col_name>`<br>
     shows length of the column
+
   * `xmeta getColAtPos -db <db_name> -tbl <table_name> -pos <col_pos>`<br>
     shows column at position `-pos`
+
   * `xmeta getPK -db <db_name> -tbl <table_name>`<br>
     prints primary key of the table
+
   * `xmeta getFK -db <db_name> -tbl <table_name>`<br>
     prints foreign key of the table
+
   * `xmeta getFKRefTables -db <db_name> -tbl <table_name> -col <col_name>`<br>
     prints foreign keys and their reference tables
+
   * `xmeta getIndexes -db <db_name> -tbl <table_name>`<br>
    prints indexes in the table
+
   * `xmeta getAllIdxRefTable -db <db_name> -tbl <table_name>`<br>
    prints all indexes and their reference tables
+
   * `xmeta existsDatabase -db <db_name>`<br>
     prints `true` if database exists `false` other wise
+
   * `xmeta existsTable -db <db_name> -tbl <table_name>`<br>
     prints `true` if table exists `false` other wise
+
   * `xmeta existsColumn -db <db_name> -tbl <table_name> -col <col_name>`<br>
     prints `true` if column exists `false` other wise
+
   * `xmeta isSupport -f <feature_name>`<br>
     prints `true` if the feature `-f` supported by the database driver
 
