@@ -34,7 +34,7 @@ when started with `--mode rest` the application starts as a REST service.
   * Get database driver info `/xmeta/api/v1/info/dbdriver/`
 
 # Available commands
-  **NOTE** a question Mark(?) before option represents optional parameter
+  **NOTE**: A question Mark(?) before option represents optional parameter
   * xmeta --help
   * xmeta \<commandName\> --help
   * xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type `? -db` db_name<br>
