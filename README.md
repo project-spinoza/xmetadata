@@ -13,10 +13,10 @@ when started with `--mode cmd` the application starts as a commandline tool<br>
 when started with `--mode rest` the application starts as a REST service.
 
 # REST end points
-  * LIST AVAILABLE ROUTES `/xmeta/api/v1/`
-  * SHOW DATABASES `/xmeta/api/v1/list/db`
-  * SHOW TABLES `/xmeta/api/v1/list/table/:database`
-  * SHOW COLUMNS `/xmeta/api/v1/list/column/:database/:table`
+  * List available routes   `/xmeta/api/v1/`
+  * Show databases   `/xmeta/api/v1/list/db`
+  * Show tables   `/xmeta/api/v1/list/table/:database`
+  * Show columns `/xmeta/api/v1/list/column/:database/:table`
   * Show columns with types `/xmeta/api/v1/list/columnWithType/:database/:table`
   * Get column type `/xmeta/api/v1/get/columnType/:database/:table/:column`
   * Get column length `/xmeta/api/v1/get/columnLength/:database/:table/:column`
