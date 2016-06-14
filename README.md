@@ -34,25 +34,13 @@ when started with `--mode rest` the application starts as a REST service.
   * Get database driver info `/xmeta/api/v1/info/dbdriver/`
 
 # Available commands
-  1. xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type<br>
-  **Usage:** xmeta connect [options]<br>
-  Options:<br>
-   * `--help`<br>
-    Display help for command<br>
-    Default: false<br>
-   * `-db`<br>
-    optional database name<br>
-   * `* -host`<br>
-    database host<br>
-   * `* -pass`<br>
-    database pass<br>
-   * `* -port`<br>
-    database port<br>
-    Default: 0<br>
-   * `* -type`<br>
-    database type e.g. mysql, postgre etc.<br>
-   * `* -user`<br>
-    database user<br>
+  **NOTE** a question Mark(?) before option represents optional parameter
+  * xmeta --help
+  * xmeta \<commandName\> --help
+  * xmeta connect `-host` db_host `-port` db_port `-user` db_user `-pass` db_pwd `-type` db_type `? -db` db_name<br>
+  * xmeta showDatabases <br>
+  * xmeta showTables `-db` db_name<br>
+  * xmeta showColumns `-db` db_name `-tbl` table_name
 
 # How to implement
 
