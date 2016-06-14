@@ -44,7 +44,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     router.route().handler(BodyHandler.create());
     authProvider = JWTAuth.create(vertx, new JsonObject().put("keyStore", new JsonObject()
         .put("type", "jceks")
-        .put("path", "keystore.jceks")
+        .put("path", "/keystore.jceks")
         .put("password", "secret")));
     
     router.route("/xmeta/*").handler(JWTAuthHandler.create(authProvider, "/auth"));

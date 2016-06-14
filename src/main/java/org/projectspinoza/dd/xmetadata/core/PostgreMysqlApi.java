@@ -150,17 +150,24 @@ public class PostgreMysqlApi implements XmetaApi {
     String tableNamePattern = tableName;
     String columnNamePattern =columnName;
     
-    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    XmetaResult<Map<String, String>> response = new XmetaResult<Map<String, String>>();
     response.setStatus(200);
-    response.setTitle("ListTableColumnsWithType[" + databaseName + "." + tableName + "]");
+    response.setTitle("getColumnType[" + databaseName + "." + tableName + "." + columnName +"]");
     ResultSet rs = null;
-   List<String> columnType = new ArrayList<String>();
+   Map<String, String> columnType = new HashMap<String, String>();
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
   
       while (rs.next()) {
-        columnType.add(rs.getString("TYPE_NAME"));
+        if(rs.getString("COLUMN_NAME").equalsIgnoreCase(columnName)){
+          columnType.put(rs.getString("COLUMN_NAME"), rs.getString("TYPE_NAME"));
+        }
+      }
+      
+      if(columnType.isEmpty()){
+        columnType.put(columnName, "unkown column");
+        response.setError("Unkown Column [" + columnName + "]");
       }
       rs.close();
     } catch (SQLException e){
@@ -247,19 +254,25 @@ public class PostgreMysqlApi implements XmetaApi {
     String tableNamePattern = tableName;
     String columnNamePattern =columnName;
     
-    XmetaResult<List<Integer>> response = new XmetaResult<List<Integer>>();
+    XmetaResult<Map<String, Integer>> response = new XmetaResult<Map<String, Integer>>();
     response.setStatus(200);
     response.setTitle("ListTableColumnsWithType[" + databaseName + "." + tableName + "]");
     ResultSet rs = null;
-   List<Integer> columnLength = new ArrayList<Integer>();
+    Map<String, Integer> columnLength = new HashMap<String, Integer>();
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
       rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
   
       while (rs.next()) {
-        columnLength.add(rs.getInt("COLUMN_SIZE"));
+        if(rs.getString("COLUMN_NAME").equalsIgnoreCase(columnName)){
+          columnLength.put(rs.getString("COLUMN_NAME"), rs.getInt("COLUMN_SIZE"));
+        }
       }
       rs.close();
+      if(columnLength.isEmpty()){
+        System.out.println("Unkown Column [" + columnName + "]");
+        response.setError("Unkown Column [" + columnName + "]");
+      }
     } catch (SQLException e){
       LOG.error("Error: {}", e);
       response.setError(String.format("SQLException: %s", e.getMessage()));

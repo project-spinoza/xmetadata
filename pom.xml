@@ -19,6 +19,7 @@
 		<postgresql.connectorj.version>9.1-901-1.jdbc4</postgresql.connectorj.version>
 		<vertx.version>3.2.1</vertx.version>
 		<jackson.mapper.version>1.9.13</jackson.mapper.version>
+		<jcommander.version>1.48</jcommander.version>
 		<junit.version>4.11</junit.version>
 	</properties>
 
@@ -68,21 +69,21 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-		
+
 		<!-- vertx-auth-jdbc dependency -->
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-auth-jdbc</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-		
+
 		<!-- vertx-auth-jwt dependency -->
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-auth-jwt</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-		
+
 		<!-- jackson mapper -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -90,6 +91,12 @@
 			<version>${jackson.mapper.version}</version>
 		</dependency>
 
+		<!-- JCommander v1.48 -->
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>${jcommander.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -105,6 +112,7 @@
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>log4j2.xml</include>
+					<include>keystore.jceks</include>
 				</includes>
 				<excludes>
 					<exclude></exclude>
@@ -122,6 +130,28 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>org.projectspinoza.dd.xmetadata.App</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
