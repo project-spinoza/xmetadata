@@ -42,7 +42,7 @@ when started with `--mode rest` the application starts as a REST service.
     shows help regarding this command
 
   * `xmeta connect -host <db_host> -port <db_port> -user <db_user> -pass <db_pwd> -type <db_type>`<br>
-    connects to database `-type` represents type of db to connect to e.g. mysql | postgre
+    connects to database `-type` represents type of db to connect to e.g. mysql | postgresql
 
   * `xmeta showDatabases`<br>
     shows available databases
