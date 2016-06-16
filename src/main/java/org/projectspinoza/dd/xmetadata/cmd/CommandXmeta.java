@@ -48,7 +48,7 @@ class CommandConnect extends BasicCommand<Object>{
     case mysql:
       xmeta = new PostgreMysqlApi(connect(dbms.getDriver(), dbms.name(), db == null ? "mysql" : db));
       break;
-    case postgres:
+    case postgresql:
       xmeta = new PostgreMysqlApi(connect(dbms.getDriver(), dbms.name(), db == null ? "postgres" : db));
       break;
     default:
@@ -216,8 +216,87 @@ class CommandExistsColumn extends BasicCommand<Boolean> {
   }
 }
 
+
+@Parameters(commandNames = "getColAtPos", commandDescription = "Column At Position: List")
+class CommandGetColAtPos extends BasicCommand<List<String>>{
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl;
+  
+  @Parameter(names = "-pos", description = "column position", required = true)
+  private int colposition;
+  
+  @Override
+  public List<String> exec(XmetaApi api) {
+    XmetaResult r = api.getColumnAtPosition(db, tbl, colposition);
+    return (List<String>) r.getResult();
+  }
+}
+
+@Parameters(commandNames = "getPK", commandDescription = "primary key: List")
+class CommandGetPK extends BasicCommand<List<String>>{
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl;
+  
+  @Override
+  public List<String> exec(XmetaApi api) {
+    XmetaResult r = api.getPrimaryKey(db, tbl);
+    return (List<String>) r.getResult();
+  }
+}
+
+@Parameters(commandNames = "getFK", commandDescription = "foreign key: List")
+class CommandGetFK extends BasicCommand<List<String>>{
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl;
+  
+  @Override
+  public List<String> exec(XmetaApi api) {
+    XmetaResult r = api.getForeignKey(db, tbl);
+    return (List<String>) r.getResult();
+  }
+}
+
+@Parameters(commandNames = "getFKRefTables", commandDescription = "foreign key: List")
+class CommandGetFKRefTables extends BasicCommand<Map<String,String>>{
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl;
+  
+  @Override
+  public Map<String,String> exec(XmetaApi api) {
+    XmetaResult r = api.getForeignKeysReferencedTable(db, tbl);
+    return (Map<String,String>) r.getResult();
+  }
+}
+
+@Parameters(commandNames = "getIndexes", commandDescription = "Indexes: List")
+class CommandGetIndexes extends BasicCommand<List<String>>{
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl;
+  
+  @Override
+  public List<String> exec(XmetaApi api) {
+    XmetaResult r = api.getIndexes(db, tbl);
+    return (List<String>) r.getResult();
+  }
+}
+
 enum DBMS{
-  mysql("com.mysql.jdbc.Driver"), postgres("org.postgresql.Driver");
+  mysql("com.mysql.jdbc.Driver"), postgresql("org.postgresql.Driver");
   
   private final String driver;
   

@@ -233,7 +233,17 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
   @Override
   public void getColumnAtPosition(RoutingContext routingContext) {
     // TODO Auto-generated method stub
+    XmetaApi api = getApiHandler(routingContext.user().principal());
     
+    Buffer responseData = toBuffer(api.getColumnAtPosition(routingContext.request().getParam("database"), routingContext.request().getParam("table"), Integer.parseInt(routingContext.request().getParam("columnIndex"))));
+    HttpServerResponse response = routingContext.response();
+    response.setStatusCode(200);
+    response.headers()
+    .add("Content-Length", responseData.length()+"")
+    .add("Content-Type", "application/json");
+    
+    api.closeConnection();
+    response.end(responseData);
   }
 
   @Override

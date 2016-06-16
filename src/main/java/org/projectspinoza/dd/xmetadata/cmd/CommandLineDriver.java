@@ -115,14 +115,40 @@ public class CommandLineDriver {
       System.out.println();
       break;
     case getColAtPos:
+      CommandGetColAtPos cmdGetColAtPos = (CommandGetColAtPos) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      List<String> getColAtPos = cmdGetColAtPos.exec(apiHandler);
+      for(String key : getColAtPos){
+        System.out.println(key + ", ");
+      }
       break;
     case getPK:
+      CommandGetPK cmdGetPK = (CommandGetPK) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      List<String> getPK = cmdGetPK.exec(apiHandler);
+      for(String key : getPK){
+        System.out.println(key + ", ");
+      }
       break;
     case getFK:
+      CommandGetFK cmdGetFK = (CommandGetFK) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      List<String> getFK = cmdGetFK.exec(apiHandler);
+      for(String key : getFK){
+        System.out.println(key + ", ");
+      }
       break;
     case getFKRefTables:
+      CommandGetFKRefTables cmdGetFKRefTables = (CommandGetFKRefTables) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      Map<String, String> GetFKRefTables = cmdGetFKRefTables.exec(apiHandler);
+      for(String key : GetFKRefTables.keySet()){
+        System.out.print(key + ":" + GetFKRefTables.get(key) + ", ");
+      }
+      System.out.println();
       break;
     case getIndexes:
+      CommandGetIndexes cmdGetindexes = (CommandGetIndexes) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      List<String> getindexes = cmdGetindexes.exec(apiHandler);
+      for(String key : getindexes){
+        System.out.println(key + ", ");
+      }
       break;
     case getAllIdxRefTable:
       break;
@@ -156,6 +182,11 @@ public class CommandLineDriver {
     rootCommander.getCommands().get("xmeta").addCommand(new CommandExistsDatabase());
     rootCommander.getCommands().get("xmeta").addCommand(new CommandExistsTable());
     rootCommander.getCommands().get("xmeta").addCommand(new CommandExistsColumn());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetPK());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetFK());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetFKRefTables());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetIndexes());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetColAtPos());
   }
 
   private boolean validated(String arg){

@@ -285,9 +285,36 @@ public class PostgreMysqlApi implements XmetaApi {
   }
 
   @Override
-  public XmetaResult getColumnAtPosition(String databaseName, int columnPosition) {
+  public XmetaResult getColumnAtPosition(String databaseName, String tableName, int columnPosition) {
+    String catalog = databaseName;
+    String schemaPattern = null;
+    String tableNamePattern = tableName;
     
-    return null;
+    XmetaResult<List<String>> response = new XmetaResult<List<String>>();
+    response.setStatus(200);
+    response.setTitle("ColumnAtPosition[" + databaseName + "." + tableName + "."  +  columnPosition + "]");
+    ResultSet rs = null;
+    List<String> columnatgivenposition = new ArrayList<String>();
+    try {
+      DatabaseMetaData databaseMetaData = connection.getMetaData();
+      rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,null);
+      
+      while (rs.next()) {
+        int position = rs.getInt(columnPosition);
+        if(columnPosition == rs.getInt(columnPosition)){
+          columnatgivenposition.add(rs.getString("COLUMN_NAME"));
+        }
+      }
+      rs.close();
+    } catch (SQLException e){
+      LOG.error("Error: {}", e);
+      response.setError(String.format("SQLException: %s", e.getMessage()));
+      if(rs != null){
+        try {rs.close();} catch (SQLException e1) { /** ignore it **/ }
+      }
+    }
+    response.setResult(columnatgivenposition);
+    return response;
   }
 
   @Override

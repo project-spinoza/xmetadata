@@ -14,7 +14,7 @@ public interface XmetaApi {
   public XmetaResult getPrimaryKey(String databaseName, String tableName);
   public XmetaResult getForeignKey(String databaseName, String tableName);
   public XmetaResult getColumnLength(String databaseName, String tableName, String columnName);
-  public XmetaResult getColumnAtPosition(String databaseName, int columnPosition);
+  public XmetaResult getColumnAtPosition(String databaseName, String tableName, int columnPosition);
   public XmetaResult getForeignKeysReferencedTable(String databaseName, String tableName);
   public XmetaResult getIndexes(String databaseName, String tableName);
   public XmetaResult getAllIndexesAndReferencedTable(String databaseName, String tableName);
