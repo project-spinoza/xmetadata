@@ -151,6 +151,12 @@ public class CommandLineDriver {
       }
       break;
     case getAllIdxRefTable:
+      CommandGetAllIdxRefTable cmdGetAllIdxRefTable = (CommandGetAllIdxRefTable) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
+      Map<String, String> GetAllIdxRefTable = cmdGetAllIdxRefTable.exec(apiHandler);
+      for(String key : GetAllIdxRefTable.keySet()){
+        System.out.print(key + ":" + GetAllIdxRefTable.get(key) + ", ");
+      }
+      System.out.println();
       break;
     case existsDatabase:
       CommandExistsDatabase existsDb = (CommandExistsDatabase) rootCommander.getCommands().get("xmeta").getCommands().get(parsedCommand).getObjects().get(0);
@@ -187,6 +193,7 @@ public class CommandLineDriver {
     rootCommander.getCommands().get("xmeta").addCommand(new CommandGetFKRefTables());
     rootCommander.getCommands().get("xmeta").addCommand(new CommandGetIndexes());
     rootCommander.getCommands().get("xmeta").addCommand(new CommandGetColAtPos());
+    rootCommander.getCommands().get("xmeta").addCommand(new CommandGetAllIdxRefTable());
   }
 
   private boolean validated(String arg){

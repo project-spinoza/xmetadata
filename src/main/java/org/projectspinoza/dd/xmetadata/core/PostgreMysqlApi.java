@@ -290,6 +290,7 @@ public class PostgreMysqlApi implements XmetaApi {
     String schemaPattern = null;
     String tableNamePattern = tableName;
     
+    int i=0 ;
     XmetaResult<List<String>> response = new XmetaResult<List<String>>();
     response.setStatus(200);
     response.setTitle("ColumnAtPosition[" + databaseName + "." + tableName + "."  +  columnPosition + "]");
@@ -300,10 +301,10 @@ public class PostgreMysqlApi implements XmetaApi {
       rs = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,null);
       
       while (rs.next()) {
-        int position = rs.getInt(columnPosition);
-        if(columnPosition == rs.getInt(columnPosition)){
-          columnatgivenposition.add(rs.getString("COLUMN_NAME"));
+        if(i==columnPosition){
+          columnatgivenposition.add(rs.getString(4));
         }
+        i++;
       }
       rs.close();
     } catch (SQLException e){
@@ -396,9 +397,15 @@ public class PostgreMysqlApi implements XmetaApi {
     
     try {
       DatabaseMetaData databaseMetaData = connection.getMetaData();
-      rs = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
+      rs = databaseMetaData.getImportedKeys(catalog, schemaPattern, tableNamePattern);
       while (rs.next()) {
-        TableIndexesandreferencedtable.put("Referenced Table", rs.getString("TABLE_NAME"));
+        TableIndexesandreferencedtable.put("Referenced Table", rs.getString("PKTABLE_NAME"));
+        
+      }
+      rs.close();
+      rs = databaseMetaData.getIndexInfo(catalog, schemaPattern, tableNamePattern,true,true);
+      while (rs.next()) {
+        TableIndexesandreferencedtable.put("Index",rs.getString("COLUMN_NAME"));
       }
       rs.close();
     } catch (SQLException e){

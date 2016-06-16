@@ -174,6 +174,20 @@ class CommandGetColType extends BasicCommand<Map<String, String>> {
   }
 }
 
+@Parameters(commandNames = "getAllIdxRefTable", commandDescription = "get All inexes and ref tables")
+class CommandGetAllIdxRefTable extends BasicCommand<Map<String, String>> {
+  @Parameter(names = "-db", description = "database name", required = true)
+  private String db;
+  @Parameter(names = "-tbl", description = "table name", required = true)
+  private String tbl; 
+  
+  @Override
+  public Map<String, String> exec(XmetaApi api) {
+    XmetaResult r = api.getAllIndexesAndReferencedTable(db, tbl);
+    return (Map<String, String>) r.getResult();
+  }
+}
+
 @Parameters(commandNames = "existsDatabase", commandDescription = "database exists: true|false")
 class CommandExistsDatabase extends BasicCommand<Boolean> {
   @Parameter(names = "-db", description = "database name", required = true)
