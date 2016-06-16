@@ -32,7 +32,7 @@ class CommandConnect extends BasicCommand<Object>{
   private String user;
   @Parameter(names = "-pass", description = "database pass", required = true)
   private String pass;
-  @Parameter(names = "-type", description = "database type e.g. mysql, postgre etc.", required = true)
+  @Parameter(names = "-type", description = "database type e.g. mysql, postgresql etc.", required = true)
   private String type;
   @Parameter(names = "-db", description = "database name", required = false)
   private String db;
