@@ -33,9 +33,10 @@ when started with `--mode rest` the application starts as a REST service.
   * `GET` Supported features `/xmeta/api/v1/get/supports/:feature`
   * `GET` Get database info `/xmeta/api/v1/info/db/`
   * `GET` Get database driver info `/xmeta/api/v1/info/dbdriver/`
-  ### How to access the service
+ 
+### How to access the service
   * After running the application in `--mode rest` do the following:
-  * Send Post request to `/auth`, with json data in the following format:
+  * Send Post request to `/auth`, with json data in the following format:<br>
     `{"db_host":"<db_host>","db_port":<db_port> ,"db_user":"<db_user>","db_pass":"<db_pass>","db_type":"mysql"}`
   * If your credentials are correct the service will generate and return a `token` in json response. This `token` will be used in the   header for other subsequent requests otherwise the service will return `unauthorized` in response. You have to send this `token`    in the request header in this format `Authorization: bearer <your_token>`
    
