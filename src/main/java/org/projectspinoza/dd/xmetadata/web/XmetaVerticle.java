@@ -464,7 +464,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
       xmeta.closeConnection();
       
       Map<String,String> responsedata = new HashMap<String, String>();
-      responsedata.put("token", authProvider.generateToken(user, new JWTOptions().setExpiresInMinutes(1L)));
+      responsedata.put("token", authProvider.generateToken(user, new JWTOptions().setExpiresInMinutes(60L)));
       XmetaResult<Map<String, String>> r = new XmetaResult<Map<String, String>>();
       r.setStatus(200);
       r.setTitle("Authentication[SUCCESS]");
