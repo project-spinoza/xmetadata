@@ -11,7 +11,7 @@ Meta data extraction from various databases
   **NOTE** `--mode` can take two values `cmd` OR `rest`<br>
 when started with `--mode cmd` the application starts as a commandline tool<br>
 when started with `--mode rest` the application starts as a REST service.<br>
-By default the service will be accessible on port `8181` e.g. `http://localhost:8181/<one_of_the_following_end_point>`
+By default the service will be accessible on port `8181` e.g. `http://localhost:8181/<one_of_the_following_end_points>`
 
 # REST end points
   * `POST` Authorization end point `/auth`
