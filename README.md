@@ -13,26 +13,33 @@ when started with `--mode cmd` the application starts as a commandline tool<br>
 when started with `--mode rest` the application starts as a REST service.
 
 # REST end points
-  * List available routes   `/xmeta/api/v1/`
-  * Show databases   `/xmeta/api/v1/list/db`
-  * Show tables   `/xmeta/api/v1/list/table/:database`
-  * Show columns `/xmeta/api/v1/list/column/:database/:table`
-  * Show columns with types `/xmeta/api/v1/list/columnWithType/:database/:table`
-  * Get column type `/xmeta/api/v1/get/columnType/:database/:table/:column`
-  * Get column length `/xmeta/api/v1/get/columnLength/:database/:table/:column`
-  * Get column at pos `/xmeta/api/v1/get/columnAtPos/:database/:table/:columnIndex`
-  * Get primary key `/xmeta/api/v1/get/primaryKey/:database/:table`
-  * Get foreign key `/xmeta/api/v1/get/foreignKey/:database/:table`
-  * Get foreign key reference tables** `/xmeta/api/v1/get/foreignKeysRefTable/:database/:table`
-  * Get indexes `/xmeta/api/v1/get/indexes/:database/:table`
-  * Get all indexes and ref tables `/xmeta/api/v1/get/allIdxRefTable/:database/:table`
-  * Database exists `/xmeta/api/v1/exists/db/:db`
-  * Table exists `/xmeta/api/v1/exists/table/:table`
-  * Column exists `/xmeta/api/v1/exists/column/:column`
-  * Supported features `/xmeta/api/v1/get/supports/:feature`
-  * Get database info `/xmeta/api/v1/info/db/`
-  * Get database driver info `/xmeta/api/v1/info/dbdriver/`
-
+  * `POST` Authorization end point `/auth`
+  * `GET` List available routes   `/xmeta/api/v1/`
+  * `GET` Show databases   `/xmeta/api/v1/list/db`
+  * `GET` Show tables   `/xmeta/api/v1/list/table/:database`
+  * `GET` Show columns `/xmeta/api/v1/list/column/:database/:table`
+  * `GET` Show columns with types `/xmeta/api/v1/list/columnWithType/:database/:table`
+  * `GET` Get column type `/xmeta/api/v1/get/columnType/:database/:table/:column`
+  * `GET` Get column length `/xmeta/api/v1/get/columnLength/:database/:table/:column`
+  * `GET` Get column at pos `/xmeta/api/v1/get/columnAtPos/:database/:table/:columnIndex`
+  * `GET` Get primary key `/xmeta/api/v1/get/primaryKey/:database/:table`
+  * `GET` Get foreign key `/xmeta/api/v1/get/foreignKey/:database/:table`
+  * `GET` Get foreign key reference tables** `/xmeta/api/v1/get/foreignKeysRefTable/:database/:table`
+  * `GET` Get indexes `/xmeta/api/v1/get/indexes/:database/:table`
+  * `GET` Get all indexes and ref tables `/xmeta/api/v1/get/allIdxRefTable/:database/:table`
+  * `GET` Database exists `/xmeta/api/v1/exists/db/:db`
+  * `GET` Table exists `/xmeta/api/v1/exists/table/:table`
+  * `GET` Column exists `/xmeta/api/v1/exists/column/:column`
+  * `GET` Supported features `/xmeta/api/v1/get/supports/:feature`
+  * `GET` Get database info `/xmeta/api/v1/info/db/`
+  * `GET` Get database driver info `/xmeta/api/v1/info/dbdriver/`
+  ### How to access the service
+  * After running the application in `--mode rest` do the following:
+  * Send Post request to `/auth`, with json data in the following format:
+    `{"db_host":"<db_host>","db_port":<db_port> ,"db_user":"<db_user>","db_pass":"<db_pass>","db_type":"mysql"}`
+  * If your credentials are correct the service will generate and return a `token` in json response. This `token` will be used in the   header for other subsequent requests otherwise the service will return `unauthorized` in response. You have to send this `token`    in the request header in this format `Authorization: bearer <your_token>`
+   
+  
 # Available commands
   **NOTE**: A question Mark(?) before option represents optional parameter
   * `xmeta --help`<br>
