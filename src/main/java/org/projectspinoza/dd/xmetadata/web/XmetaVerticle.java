@@ -454,6 +454,11 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
         .put("db_user", postJson.getString("db_user"))
         .put("db_pass", postJson.getString("db_pass"))
         .put("db_type", postJson.getString("db_type"));
+    Long tokenExpireMins = 60L;
+    if(postJson.containsKey("token_expires_min")){
+      tokenExpireMins = postJson.getInteger("token_expires_min").longValue();
+    }
+    
     if(postJson.containsKey("db_name")){
       user.put("db_name", postJson.getString("db_name"));
     }
@@ -464,7 +469,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
       xmeta.closeConnection();
       
       Map<String,String> responsedata = new HashMap<String, String>();
-      responsedata.put("token", authProvider.generateToken(user, new JWTOptions().setExpiresInMinutes(60L)));
+      responsedata.put("token", authProvider.generateToken(user, new JWTOptions().setExpiresInMinutes(tokenExpireMins)));
       XmetaResult<Map<String, String>> r = new XmetaResult<Map<String, String>>();
       r.setStatus(200);
       r.setTitle("Authentication[SUCCESS]");
