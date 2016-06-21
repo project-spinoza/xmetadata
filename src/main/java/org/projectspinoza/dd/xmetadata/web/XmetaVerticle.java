@@ -513,7 +513,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
       case mysql:
         xmeta = new PostgreMysqlApi(connect(credentials, dbms.getDriver(), dbms.name(), dbname == null ? "mysql" : dbname));
         break;
-      case postgres:
+      case postgresql:
         xmeta = new PostgreMysqlApi(connect(credentials, dbms.getDriver(), dbms.name(), dbname == null ? "postgres" : dbname));
         break;
       default:
@@ -543,7 +543,7 @@ enum Feature{
 }
 
 enum DBMS{
-  mysql("com.mysql.jdbc.Driver"), postgres("org.postgresql.Driver");
+  mysql("com.mysql.jdbc.Driver"), postgresql("org.postgresql.Driver");
   
   private final String driver;
   
