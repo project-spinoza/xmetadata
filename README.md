@@ -29,8 +29,8 @@ By default the service will be accessible on port `8181` e.g. `http://localhost:
   * `GET` Get indexes `/xmeta/api/v1/get/indexes/:database/:table`
   * `GET` Get all indexes and ref tables `/xmeta/api/v1/get/allIdxRefTable/:database/:table`
   * `GET` Database exists `/xmeta/api/v1/exists/db/:db`
-  * `GET` Table exists `/xmeta/api/v1/exists/table/:table`
-  * `GET` Column exists `/xmeta/api/v1/exists/column/:column`
+  * `GET` Table exists `/xmeta/api/v1/exists/table/:database/:table`
+  * `GET` Column exists `/xmeta/api/v1/exists/column/:database/:table/:column`
   * `GET` Supported features `/xmeta/api/v1/get/supports/:feature`
   * `GET` Get database info `/xmeta/api/v1/info/db/`
   * `GET` Get database driver info `/xmeta/api/v1/info/dbdriver/`
