@@ -66,8 +66,8 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     router.get("/xmeta/api/v1/get/allIdxRefTable/:database/:table").handler(this::getAllIndexesAndReferencedTable);
     
     router.get("/xmeta/api/v1/exists/db/:db").handler(this::databaseExists);
-    router.get("/xmeta/api/v1/exists/table/:table").handler(this::tableExists);
-    router.get("/xmeta/api/v1/exists/column/:column").handler(this::columnExists);
+    router.get("/xmeta/api/v1/exists/table/:database/:table").handler(this::tableExists);
+    router.get("/xmeta/api/v1/exists/column/:database/:table/:column").handler(this::columnExists);
     
     router.get("/xmeta/api/v1/get/supports/:feature").handler(this::supportsFeature);
     
@@ -318,8 +318,9 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
   public void tableExists(RoutingContext routingContext) {
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    String tableName =routingContext.request().getParam("table").toString();
-    String databaseName = "testDb";
+    String tableName = routingContext.request().getParam("table").toString();
+    String databaseName = routingContext.request().getParam("database").toString();
+    
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
     boolean exists = api.tableExists(databaseName,tableName);
@@ -343,8 +344,9 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     String columnName =routingContext.request().getParam("column").toString();
-    String databaseName = "testDb";
-    String tableName = "company";
+    
+    String databaseName = routingContext.request().getParam("database").toString();
+    String tableName = routingContext.request().getParam("table").toString();
     XmetaResult<Map<String,String>> r = new XmetaResult<Map<String,String>>();
     Map<String,String> responsedata = new HashMap<String, String>();
     boolean exists = api.columnExists(databaseName,tableName,columnName);
