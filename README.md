@@ -40,8 +40,8 @@ By default the service will be accessible on port `8181` e.g. `http://localhost:
   * Send Post request to `/auth`, with your database credentials in the following json format:<br>
     `{"db_host":"<db_host>","db_port":<db_port> ,"db_user":"<db_user>","db_pass":"<db_pass>","db_type":"mysql"}`
   * If your credentials are correct the service will generate and return a `token` in json response. This `token` will be used in the   header for other subsequent requests otherwise the service will return `unauthorized` in response. You have to send this `token`    in the request header in this format `Authorization: bearer <your_token>`<br><br>
-  **Note**:<br>
-    Optionally in the above json you can specify the name of the host database using `db_name` and token expire time using `token_expires_min` key e.g. `{...,"db_name":"mysql","token_expires_min":60,...}`
+  **NOTE:**<br>
+    Optionally in the above json you can specify the name of the host database using `db_name` and token expire time using `token_expires_min` key e.g. `{...,"db_name":"Employee","token_expires_min":60,...}`
    
   
 # Available commands
