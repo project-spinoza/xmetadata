@@ -61,13 +61,14 @@ public class PostgreMysqlApi implements XmetaApi {
       String catalog = databaseName;
       String schemaPattern = null;
       String tableNamePattern = null;
-      String[] types = null;
+      String[] types ={ "TABLE" };
   
       rs = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
       while (rs.next()) {
         tables.add(rs.getString(3));
       }
       rs.close();
+      
     } catch (SQLException e){
       LOG.error("Error: {}", e);
       response.setError(String.format("SQLException: %s", e.getMessage()));
