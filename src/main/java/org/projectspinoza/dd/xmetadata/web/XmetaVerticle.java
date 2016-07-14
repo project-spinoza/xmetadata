@@ -1,5 +1,19 @@
 package org.projectspinoza.dd.xmetadata.web;
 
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.User;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTOptions;
+import io.vertx.ext.web.Route;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.JWTAuthHandler;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,19 +30,6 @@ import org.projectspinoza.dd.xmetadata.XmetaResult;
 import org.projectspinoza.dd.xmetadata.core.PostgreMysqlApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.jwt.JWTAuth;
-import io.vertx.ext.auth.jwt.JWTOptions;
-import io.vertx.ext.web.Route;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.JWTAuthHandler;
 
 
 public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
@@ -125,9 +126,11 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void listTables(RoutingContext routingContext) {
+    String dbName = routingContext.request().getParam("database");
+    routingContext.user().principal().put("db_name", dbName);
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(api.listTables(routingContext.request().getParam("database")));
+    Buffer responseData = toBuffer(api.listTables(dbName));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
