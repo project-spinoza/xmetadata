@@ -2,6 +2,7 @@ package org.projectspinoza.dd.xmetadata.core;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,14 +29,23 @@ public class PostgreMysqlApi implements XmetaApi {
   public XmetaResult listDatabases(){
     
     List<String> databases = new ArrayList<String>();
+    PreparedStatement preparedStatement = null;
     XmetaResult<List<String>> response = new XmetaResult<List<String>>();
     response.setStatus(200);
     response.setTitle("ListDatabases");
     ResultSet rs = null;
+    String query =null;
     try {
-      rs = connection.getMetaData().getCatalogs();
+      String productName = connection.getMetaData().getDatabaseProductName().toLowerCase();
+      if(productName.equals("mysql")){
+        query = "SHOW DATABASES;";
+      }else if(productName.equals("postgresql")) {
+        query = "SELECT datname FROM pg_database WHERE datistemplate = false;";
+      }
+      preparedStatement = connection.prepareStatement(query);
+      rs = preparedStatement.executeQuery();
       while (rs.next()) {
-        databases.add(rs.getString("TABLE_CAT"));
+        databases.add(rs.getString(1));
       }
       rs.close();
     } catch (SQLException e){
