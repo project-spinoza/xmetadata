@@ -82,7 +82,7 @@ By default the service will be accessible on port `8181` e.g. `http://localhost:
   * `xmeta getFK -db <db_name> -tbl <table_name>`<br>
     prints foreign key of the table
 
-  * `xmeta getFKRefTables -db <db_name> -tbl <table_name> -col <col_name>`<br>
+  * `xmeta getFKRefTables -db <db_name> -tbl <table_name>`<br>
     prints foreign keys and their reference tables
 
   * `xmeta getIndexes -db <db_name> -tbl <table_name>`<br>
