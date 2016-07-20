@@ -126,11 +126,10 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void listTables(RoutingContext routingContext) {
-    String dbName = routingContext.request().getParam("database");
-    routingContext.user().principal().put("db_name", dbName);
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
-    Buffer responseData = toBuffer(api.listTables(dbName));
+    Buffer responseData = toBuffer(api.listTables(routingContext.request().getParam("database")));
     HttpServerResponse response = routingContext.response();
     response.setStatusCode(200);
     response.headers()
@@ -143,6 +142,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void listColumns(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.listColumns(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -159,6 +159,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void listColumnsWithType(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.listColumnsWithType(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -174,6 +175,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getColumnType(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getColumnType(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
@@ -189,6 +191,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getPrimaryKey(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getPrimaryKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -204,6 +207,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getForeignKey(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getForeignKey(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -219,6 +223,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getColumnLength(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getColumnLength(routingContext.request().getParam("database"), routingContext.request().getParam("table"),routingContext.request().getParam("column")));
@@ -235,6 +240,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getColumnAtPosition(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     // TODO Auto-generated method stub
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
@@ -251,6 +257,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getForeignKeysReferencedTable(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getForeignKeysReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -266,6 +273,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getIndexes(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getIndexes(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -281,6 +289,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void getAllIndexesAndReferencedTable(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     Buffer responseData = toBuffer(api.getAllIndexesAndReferencedTable(routingContext.request().getParam("database"), routingContext.request().getParam("table")));
@@ -296,6 +305,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void databaseExists(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("db"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     String databaseName =routingContext.request().getParam("db").toString();
@@ -319,6 +329,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void tableExists(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     String tableName = routingContext.request().getParam("table").toString();
@@ -344,6 +355,7 @@ public class XmetaVerticle extends AbstractVerticle implements RoutingHandler{
 
   @Override
   public void columnExists(RoutingContext routingContext) {
+    routingContext.user().principal().put("db_name", routingContext.request().getParam("database"));
     XmetaApi api = getApiHandler(routingContext.user().principal());
     
     String columnName =routingContext.request().getParam("column").toString();

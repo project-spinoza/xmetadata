@@ -84,6 +84,14 @@ class CommandConnect extends BasicCommand<Object>{
     return "XmetaCommand [host=" + host + ", port=" + port + ", user=" + user + ", pass=" + pass + ", type=" + type
         + ", db=" + db + "]";
   }
+  
+  public void setDb(String db){
+    this.db = db ;
+  }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "showDatabases", commandDescription = "shows available databases")
@@ -93,7 +101,8 @@ class CommandShowDatabases extends BasicCommand<List<String>> {
   public List<String> exec(XmetaApi api) {
     XmetaResult r = api.listDatabases();
     return (List<String>) r.getResult();
-  }
+  } 
+  
 }
 
 @Parameters(commandNames = "showTables", commandDescription = "shows available tables")
@@ -105,6 +114,10 @@ class CommandShowTables extends BasicCommand<List<String>> {
   public List<String> exec(XmetaApi api) {
     XmetaResult r = api.listTables(db);
     return (List<String>) r.getResult();
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -121,6 +134,10 @@ class CommandShowColumns extends BasicCommand<List<String>> {
     XmetaResult r = api.listColumns(db, tbl);
     return (List<String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "showColsWithType", commandDescription = "shows columns with type")
@@ -135,6 +152,10 @@ class CommandShowColsWithType extends BasicCommand<Map<String, String>> {
   public Map<String, String> exec(XmetaApi api) {
     XmetaResult r = api.listColumnsWithType(db, tbl);
     return (Map<String, String>) r.getResult();
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -154,6 +175,10 @@ class CommandGetColLength extends BasicCommand<Map<String, Integer>> {
     XmetaResult r = api.getColumnLength(db, tbl, col);
     return (Map<String, Integer>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "getColType", commandDescription = "get column type")
@@ -172,6 +197,10 @@ class CommandGetColType extends BasicCommand<Map<String, String>> {
     XmetaResult r = api.getColumnType(db, tbl, col);
     return (Map<String, String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "getAllIdxRefTable", commandDescription = "get All inexes and ref tables")
@@ -186,6 +215,10 @@ class CommandGetAllIdxRefTable extends BasicCommand<Map<String, String>> {
     XmetaResult r = api.getAllIndexesAndReferencedTable(db, tbl);
     return (Map<String, String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "existsDatabase", commandDescription = "database exists: true|false")
@@ -196,6 +229,10 @@ class CommandExistsDatabase extends BasicCommand<Boolean> {
   @Override
   public Boolean exec(XmetaApi api) {
     return api.databaseExists(db);
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -210,6 +247,10 @@ class CommandExistsTable extends BasicCommand<Boolean> {
   @Override
   public Boolean exec(XmetaApi api) {
     return api.tableExists(db, tbl);
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -227,6 +268,10 @@ class CommandExistsColumn extends BasicCommand<Boolean> {
   @Override
   public Boolean exec(XmetaApi api) {
     return api.columnExists(db, tbl, col);
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -247,6 +292,10 @@ class CommandGetColAtPos extends BasicCommand<List<String>>{
     XmetaResult r = api.getColumnAtPosition(db, tbl, colposition);
     return (List<String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "getPK", commandDescription = "primary key: List")
@@ -261,6 +310,10 @@ class CommandGetPK extends BasicCommand<List<String>>{
   public List<String> exec(XmetaApi api) {
     XmetaResult r = api.getPrimaryKey(db, tbl);
     return (List<String>) r.getResult();
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
@@ -277,6 +330,10 @@ class CommandGetFK extends BasicCommand<List<String>>{
     XmetaResult r = api.getForeignKey(db, tbl);
     return (List<String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "getFKRefTables", commandDescription = "foreign key: List")
@@ -292,6 +349,10 @@ class CommandGetFKRefTables extends BasicCommand<Map<String,String>>{
     XmetaResult r = api.getForeignKeysReferencedTable(db, tbl);
     return (Map<String,String>) r.getResult();
   }
+  
+  public String getDb(){
+    return this.db;
+  }
 }
 
 @Parameters(commandNames = "getIndexes", commandDescription = "Indexes: List")
@@ -306,6 +367,10 @@ class CommandGetIndexes extends BasicCommand<List<String>>{
   public List<String> exec(XmetaApi api) {
     XmetaResult r = api.getIndexes(db, tbl);
     return (List<String>) r.getResult();
+  }
+  
+  public String getDb(){
+    return this.db;
   }
 }
 
